@@ -9,6 +9,7 @@ except:
     print('please install module "keyboard" to access most of this program. \nyou can do this by typing "pip install keyboard" in the terminal.')
 mousex = 0
 mousey = 0
+lvname = 'Unytitled level'
 blockx = []
 blocky = []
 blocklen = []
@@ -31,7 +32,7 @@ def setspawn(x, y):
     global playerspawn
     playerspawn = [x, y]
 def download(List):
-    global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn
+    global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn, lvname
     blockx = List[0]
     blocky = List[1]
     blocklen = List[2]
@@ -40,6 +41,7 @@ def download(List):
     blockname = List[5]
     blockcol = List[6]
     playerspawn = List[7]
+    lvname = List[8]
 def deleteblock(name):
     global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol
     for i in range(len(blockname)):
@@ -50,8 +52,16 @@ def deleteblock(name):
             blockwid.pop(i)
             blockname.pop(i)
             blockcol.pop(i)
+            blocktype.pop(i)
             break
 
+w = Tk()
+w.geometry('1350x690')
+
+def setlevelname(name):
+    global w, lvname
+    lvname = name
+    w.title(name)
 
 
 
@@ -79,15 +89,21 @@ possible blocks (in block type):
 also, the rules are:
 -  the block name should always be different
 
+commands:
+
+- Ctrl (control): shows all block coordinates
+- Shift: shows fps
+
 possible blocks:
 
 -  createblock((x position), (y position), (length), (width), (type), (name), (fill), (outline))
 -  setspawn((spawn x), (spawn y))
 -  download((List))
 -  deleteblock((name))
+-  setlevelname((name))
 '''
-download([[100], [250], [150], [50], ['block'], ['block1'], [[None, '#000000']], [200, 200]])
-deleteblock('block1')
+download([[100], [250], [150], [50], ['block'], ['block1'], [[None, '#000000']], [200, 200], 'untitled level'])
+setlevelname('template level')
 
 
 #edit mode ends here
@@ -103,8 +119,7 @@ deleteblock('block1')
 
 
 
-w = Tk()
-w.geometry('1350x690')
+
 
 c = Canvas(w, width=1350, height=690)
 c.pack(anchor='w')
@@ -120,7 +135,7 @@ def mouse_update():
 def square(x1, y1, x2, y2, Fill, out):
     c.create_rectangle(x1, y1, x2, y2, outline=out, fill=Fill)
 
-print([blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn])
+print([blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn, lvname])
 Time_ = 0
 while 1:
     Time_ = time()
