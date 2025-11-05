@@ -42,6 +42,7 @@ possible blocks (in block type):
 -  ladder (fill = None, outline = #000000)
 -  enemy (fill = None, outline = #000000)
 -  moveblock (fill = #000000, outline = #000000)
+-  end (fill = green, outline = #000000)
 
 
 also, the rules are:
