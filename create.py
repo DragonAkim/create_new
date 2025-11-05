@@ -9,7 +9,7 @@ except:
     print('please install module "keyboard" to access most of this program. \nyou can do this by typing "pip install keyboard" in the terminal.')
 mousex = 0
 mousey = 0
-lvname = 'Unytitled level'
+lvname = 'Untitled level'
 blockx = []
 blocky = []
 blocklen = []
@@ -167,4 +167,5 @@ while 1:
         fps = round(1 / (time() - Time_))
 
 w.mainloop()
+
 
