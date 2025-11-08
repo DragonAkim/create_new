@@ -18,6 +18,7 @@ blocktype = []
 blockname = []
 blockcol = []
 playerspawn = [0, 0]
+blockmove = []
 def createblock(x, y, len, wid, type, name, fill, out):
     global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol
     if not name in blockname:
@@ -28,11 +29,12 @@ def createblock(x, y, len, wid, type, name, fill, out):
         blocktype.append(type)
         blockname.append(name)
         blockcol.append([fill, out])
+        blockmove.append([0, 0])
 def setspawn(x, y):
     global playerspawn
     playerspawn = [x, y]
 def download(List):
-    global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn, lvname
+    global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn, lvname, blockmove
     blockx = List[0]
     blocky = List[1]
     blocklen = List[2]
@@ -41,7 +43,21 @@ def download(List):
     blockname = List[5]
     blockcol = List[6]
     playerspawn = List[7]
-    lvname = List[8]
+    # since create.py is frequently updating, adding new features may change the length of List
+    if len(List) == 9:
+        blockmove = List[8]
+    else:
+        blockmove = []
+        for i in range(len(blockname)):
+            blockmove.append([0, 0])
+            
+    if len(List) == 10:
+            lvname = List[9]
+    else:
+        lvname = 'Untitled level'
+
+
+
 def deleteblock(name):
     global blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol
     for i in range(len(blockname)):
@@ -53,6 +69,7 @@ def deleteblock(name):
             blockname.pop(i)
             blockcol.pop(i)
             blocktype.pop(i)
+            blockmove.pop(i)
             break
 
 w = Tk()
@@ -62,6 +79,13 @@ def setlevelname(name):
     global w, lvname
     lvname = name
     w.title(name)
+
+def setMove(name, xmove, ymove):
+    global blockmove
+    for i in range(len(blockname)):
+        if blockname[i] == name:
+            blockmove[i] = [xmove, ymove]
+            break
 
 
 
@@ -76,6 +100,10 @@ def setlevelname(name):
 
 #edit mode starts here
 ''' 
+
+installs:
+- keyboard (pip install keyboard)
+
 possible blocks (in block type):
 -  block (fill = None, outline = #000000)
 -  danger (fill = None, outline = #000000)
@@ -88,6 +116,11 @@ possible blocks (in block type):
 
 also, the rules are:
 -  the block name should always be different
+- the player and block spawn should be within the window (1350x690)
+- the block length and width should be positive numbers
+-  the block type should be one of the listed types above
+-  the fill and outline should be color values (like 'red', '#ff0000', etc. or None for no fill)
+-  there should be only one 'end' block per level (working on code to have more than one)
 
 commands:
 
@@ -101,9 +134,20 @@ possible blocks:
 -  download((List))
 -  deleteblock((name))
 -  setlevelname((name))
+-  setMove((name), (xmove), (ymove)) -- (only works for moveblock and enemy)
+
+HELP:
+- contact me with akimromanov@icloud.com or 010791@britishschool.be for any help
 '''
-download([[100], [250], [150], [50], ['block'], ['block1'], [[None, '#000000']], [200, 200], 'untitled level'])
+
+download([[100], [250], [150], [50], ['block'], ['block1'], [[None, '#000000']], [200, 200]])
 setlevelname('template level')
+deleteblock('block1')
+createblock(100, 250, 150, 50, 'block', 'block1', 'gray', 'black')
+createblock(300, 300, 150, 50, 'block', 'block2', 'gray', 'black')
+createblock(300, 275, 25, 25, 'danger', 'danger1', "#ba0000", '#ff0000')
+createblock(500, 260, 150, 50, 'block', 'block3', 'gray', 'black')
+createblock(700, 220, 150, 50, 'end', 'End', "#06c300", "#09ff00")
 
 
 #edit mode ends here
@@ -135,7 +179,7 @@ def mouse_update():
 def square(x1, y1, x2, y2, Fill, out):
     c.create_rectangle(x1, y1, x2, y2, outline=out, fill=Fill)
 
-print([blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn, lvname])
+print([blockx, blocky, blocklen, blockwid, blocktype, blockname, blockcol, playerspawn, blockmove, lvname])
 Time_ = 0
 while 1:
     Time_ = time()
@@ -167,5 +211,4 @@ while 1:
         fps = round(1 / (time() - Time_))
 
 w.mainloop()
-
 
